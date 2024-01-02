@@ -6,7 +6,7 @@
     .data
 
 // The student struct
-student: .space 128
+student: .space 96
 first_name: .asciz "Siti"
 last_name: .asciz "Aminah"
 class: .word 5
@@ -44,12 +44,12 @@ main:
     // Get the first and last element
     add X0, X19, #GRADES_OFFSET
     mov X1, #0
-    bl getElement
+    bl get_element
     mov X3, X0  // We have to store X2 again, so store it somewhere else...
 
     add X0, X19, #GRADES_OFFSET
     mov X1, #5
-    bl getElement
+    bl get_element
 
     mov X1, X3  // Move first element back to X1
     mov X2, X0  // Move last element to X2
@@ -64,8 +64,8 @@ main:
     bl min_max_grade
 
     adr X0, szString3
-    mov X1, X2
-    mov X2, X3
+    ldr X1, [X2]
+    ldr X2, [X3]
     bl printf
 
     b end
@@ -125,7 +125,7 @@ end_loop:
  * X1 = Index
  * Returns the element in X0
  */
-getElement:
+get_element:
     // X0 = base pointer, X1 = index, Offset = X0 + (X1*4)
     ldr W2, [X0, X1, lsl #2]
     mov X0, X2  // Move the element to X0
@@ -150,13 +150,13 @@ min_max_grade:
     ldr W6, [X0]    // max = grades[0]
 
 check_min:
-    ldr W7, [X0, X2, lsl #2]    // grades[i]
+    ldr W7, [X0, X4, lsl #2]    // grades[i]
     cmp W5, W7
     csel W5, W5, W7, lo         // W5 = W5 < W7 ? W5 : W7
 
 check_max:
     cmp W6, W7
-    csel W6, W6, W7, hi         // W6 > W7 ? W6 : W7
+    csel W6, W6, W7, hi         // W6 = W6 > W7 ? W6 : W7
 
 incr_min_max:
     add X4, X4, #1              // i++
