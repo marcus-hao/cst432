@@ -70,8 +70,7 @@ main:
 
     b end
 
-// I just thought about this, but we're actually updating global variables,
-// So ummm, this isnt' really good practice. But oh well...
+// Initialize the student struct
 init_student:
     stp X29, X30, [SP, #-16]!   // Preserve the link register
 
@@ -86,6 +85,7 @@ init_student:
 
     add X0, X19, #CLASS_OFFSET  // X0 = address of class in student
     adr X1, class               // Load the address of class to X1
+	ldr X1, [X1]				// Load the value of class
     str X1, [X0]                // Store the class value to X0
 
     add X0, X19, #GRADES_OFFSET // X0 = address of grades in student
